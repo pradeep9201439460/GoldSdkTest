@@ -10,6 +10,7 @@
 		android:id="@+id/safegoldButton"
 		android:layout_width="wrap_content"
 		android:layout_height="48dp"
+		android:onClick="toSafeGoldDisclaimerActivity"
 		android:text="Launch SafeGold App"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
