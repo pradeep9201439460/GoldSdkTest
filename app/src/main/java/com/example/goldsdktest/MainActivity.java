@@ -9,13 +9,18 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.safegold.SafeGoldModule;
+import com.safegold.interfaces.BuyInitInterface;
+import com.safegold.interfaces.HeartBeatInterface;
+import com.safegold.interfaces.InvoiceInitInterface;
+import com.safegold.interfaces.RedeemInitInterface;
+import com.safegold.interfaces.SellInitInterface;
+import com.safegold.models.data.Address;
 import com.sg.tapzo.ui.BuyGoldActivity;
 import com.sg.tapzo.ui.DisclaimerActivity;
 import com.sg.tapzo.ui.KycInterface;
-import com.sg.tapzo.ui.PaymentInitInterface;
 
 
-public class MainActivity extends AppCompatActivity implements KycInterface, PaymentInitInterface {
+public class MainActivity extends AppCompatActivity implements KycInterface, HeartBeatInterface, BuyInitInterface, SellInitInterface, RedeemInitInterface, InvoiceInitInterface {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,27 +29,64 @@ public class MainActivity extends AppCompatActivity implements KycInterface, Pay
 	}
 
 	public void toSafeGoldDisclaimerActivity(View view) {
-		// Initialize SafeGold Module
-		SafeGoldModule.initSDK("https://partners-staging.safegold.com", "1779effef2e29102fb1d1aee1bee5447")
-				.initUser("Dhaval Maru", "9619769676", "400602", "dhavalbright@gmail.com", "USER0001")
-				.initKey("Public Key Here...")
-				.initSecret("Private Key Here...")
-				.registerKycInterface(this)
-				.registerPaymentInitInterface(this);
-
-
-		// Open disclaimer activity
-		Intent i = new Intent(MainActivity.this, DisclaimerActivity.class);
-		startActivity(i);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// Initialize SafeGold Module
+				SafeGoldModule.initSDK("https://partners-staging.safegold.com", "1779effef2e29102fb1d1aee1bee5447")
+						.initUser("Dhaval Maru", "9619769676", "dhavalbright@gmail.com", "USER0001", new Address(
+								"A-401, Goregaon East", "Near KFC", "Mumbai", "Maharashtra", "400013"
+						)).registerHeartBeatInterface(MainActivity.this)
+						.registerKycInterface(MainActivity.this)
+						.registerBuyInitInterface(MainActivity.this)
+						.registerSellInitInterface(MainActivity.this)
+						.registerRedeemInitInterface(MainActivity.this)
+						.registerInvoiceInitInterface(MainActivity.this)
+						.launchSafeGoldApp(MainActivity.this);
+			}
+		}).start();
 	}
 
 	@Override
 	public void onKycError(String partnerRefId) {
-		Log.i("Federal Bank", "KYC Error Encountered For PartnerRefId: " + partnerRefId);
+		// handle if KYC error is thrown
 	}
 
 	@Override
-	public void onPaymentInit(double amount, String transactionId, String signature) {
-		Log.i("Federal Bank", "Initialize payment of Rs. " + amount + " for transaction no. " + transactionId);
+	public void onHandleHeartBeat() {
+		// handle heartbeat of the app here
+		// reset timers so that the app does not log out
+	}
+
+	@Override
+	public void onBuyTransaction(String partnerRefId, int txId, float amount, float buyGoldRate, float goldWeight, float netValue, float gstValue) {
+		// handle a payment towards buy transaction
+
+		// after the payment is complete make a call to
+		// SafeGoldModule.getInstance().updateBuyTransaction(partnerRefId, txId, "Bank Reference Number", "Success/Failure");
+	}
+
+	@Override
+	public void onSellTransaction(String partnerRefId, int txId, float amount, float goldSellRate, float goldWeight, float netValue, float totalAmount) {
+		// handle a payment towards sell transaction
+
+		// after the payment is complete make a call to
+		// SafeGoldModule.getInstance().updateSellTransaction(partnerRefId, txId, "Bank Reference Number", "Success/Failure");
+	}
+
+	@Override
+	public void onRedeemTransaction(String partnerRefId, int txId, String itemName, float amount, float goldWeight, float makingCharges, float totalAmount) {
+		// handle payment towards redeem transaction
+
+		// after payment is complete make a call to
+		// SafeGoldModule.getInstance().updateRedeemTransaction(partnerRefId, txId, "Bank Reference Number", "Success/Failure");
+	}
+
+	@Override
+	public void updateInvoice(String partnerRefId, int txId, String invoiceId) {
+		// a call will be made to this method after any buy sell or redeem transaction is completed
+		// an invoice id will be generated on successful transaction
+		// if the invoice id is null then the transaction is failed
+
 	}
 }
