@@ -8,13 +8,12 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.safegold.InitializationException;
 import com.safegold.SafeGoldModule;
 import com.safegold.interfaces.HeartBeatInterface;
 import com.safegold.interfaces.InvoiceInitInterface;
 import com.safegold.interfaces.PaymentInitInterface;
 import com.safegold.models.data.Address;
-import com.sg.tapzo.ui.BuyGoldActivity;
-import com.sg.tapzo.ui.DisclaimerActivity;
 import com.sg.tapzo.ui.KycInterface;
 
 
