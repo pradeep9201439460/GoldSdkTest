@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements KycInterface, Hea
 				SafeGoldModule.initSDK("https://partners-staging.safegold.com", "1779effef2e29102fb1d1aee1bee5447")
 						.initUser("Dhaval Maru", "9619769676", "dhavalbright@gmail.com", "USER0001", new Address(
 								"A-401, Goregaon East", "Near KFC", "Mumbai", "Maharashtra", "401609"
-						)).registerHeartBeatInterface(MainActivity.this)
+						)).initParentActivity(MainActivity.class)
+						.registerHeartBeatInterface(MainActivity.this)
 						.registerKycInterface(MainActivity.this)
 						.registerPaymentInitInterface(MainActivity.this)
 						.registerInvoiceInitInterface(MainActivity.this)
