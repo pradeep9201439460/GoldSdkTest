@@ -5,15 +5,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.safegold.InitializationException;
 import com.safegold.SafeGoldModule;
+import com.safegold.User;
 import com.safegold.interfaces.HeartBeatInterface;
 import com.safegold.interfaces.InvoiceInitInterface;
 import com.safegold.interfaces.PaymentInitInterface;
+import com.safegold.models.FetchInvoice;
 import com.safegold.models.data.Address;
+import com.sg.tapzo.ui.BuyGoldActivity;
 import com.sg.tapzo.ui.KycInterface;
 
 
@@ -58,8 +62,12 @@ public class MainActivity extends AppCompatActivity implements KycInterface, Hea
 	public void onBuyTransaction(String partnerRefId, int txId, float amount, float buyGoldRate, float goldWeight, float netValue, float gstValue, float totalAmount) {
 		// handle a payment towards buy transaction
 
-		// after the payment is complete make a call to
-		// SafeGoldModule.getInstance().updateBuyTransaction(partnerRefId, txId, "Bank Reference Number", "Success/Failure");
+		try {
+			// Passing a dummy payment successful for the transaction id
+			SafeGoldModule.getInstance().updateBuyTransaction(partnerRefId, txId, "BANKREFNO0001", "Success");
+		} catch (InitializationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -88,5 +96,16 @@ public class MainActivity extends AppCompatActivity implements KycInterface, Hea
 		// Additional step required only for a successful sell transaction
 		// once federal system generates a bank reference number, make a call to
 		// SafeGoldModule.getInstance().updateSellBankRefNumber(partnerRefId, txId, bankRefNumber);
+
+
+		try {
+			// Invoice Link
+			User user = SafeGoldModule.getInstance().getUser();
+			FetchInvoice invoice = user.fetchInvoice(txId);
+			Log.i("Invoice Link", invoice.link);
+
+		} catch (InitializationException e) {
+			e.printStackTrace();
+		}
 	}
 }
