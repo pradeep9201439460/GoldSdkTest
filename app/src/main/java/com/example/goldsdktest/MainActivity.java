@@ -1,5 +1,6 @@
 package com.example.goldsdktest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.safegold.InitializationException;
 import com.safegold.SafeGoldModule;
+import com.safegold.interfaces.BackPressedInterface;
 import com.safegold.interfaces.HeartBeatInterface;
 import com.safegold.interfaces.InvoiceInitInterface;
 import com.safegold.interfaces.PaymentInitInterface;
@@ -17,7 +19,7 @@ import com.safegold.models.data.Address;
 import com.sg.tapzo.ui.KycInterface;
 
 
-public class MainActivity extends AppCompatActivity implements KycInterface, HeartBeatInterface, PaymentInitInterface, InvoiceInitInterface {
+public class MainActivity extends AppCompatActivity implements KycInterface, HeartBeatInterface, PaymentInitInterface, InvoiceInitInterface, BackPressedInterface {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements KycInterface, Hea
 				SafeGoldModule.initSDK("https://partners-staging.safegold.com", "1779effef2e29102fb1d1aee1bee5447")
 						.initUser("Dhaval Maru", "9619769676", "dhavalbright@gmail.com", "USER0001", new Address(
 								"A-401, Goregaon East", "Near KFC", "Mumbai", "Maharashtra", "401609"
-						)).initParentActivity(MainActivity.class)
+						)).registerBackPressedInterface(MainActivity.this)
 						.registerHeartBeatInterface(MainActivity.this)
 						.registerKycInterface(MainActivity.this)
 						.registerPaymentInitInterface(MainActivity.this)
@@ -88,5 +90,10 @@ public class MainActivity extends AppCompatActivity implements KycInterface, Hea
 		// Additional step required only for a successful sell transaction
 		// once federal system generates a bank reference number, make a call to
 		// SafeGoldModule.getInstance().updateSellBankRefNumber(partnerRefId, txId, bankRefNumber);
+	}
+
+	@Override
+	public void onHandleBackPressed(Context context) {
+		// handle back button on buy activity
 	}
 }
