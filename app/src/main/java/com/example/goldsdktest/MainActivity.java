@@ -12,7 +12,7 @@ import com.safegold.interfaces.HeartBeatInterface;
 import com.safegold.interfaces.InvoiceInitInterface;
 import com.safegold.interfaces.PaymentInitInterface;
 import com.safegold.models.data.Address;
-import com.sg.tapzo.ui.KycInterface;
+import com.sg.nuclei.ui.KycInterface;
 
 
 public class MainActivity extends AppCompatActivity implements KycInterface, HeartBeatInterface, PaymentInitInterface, InvoiceInitInterface, BackPressedInterface {
